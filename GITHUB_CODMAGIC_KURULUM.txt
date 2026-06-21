@@ -1,0 +1,104 @@
+GitHub + Codemagic — iOS IPA (Mac olmadan)
+============================================
+
+ONKOSUL
+-------
+- GitHub hesabiniz
+- Apple ID (ucretsiz — kendi iPhone'unuza yuklemek icin)
+- iPhone USB veya TestFlight (TestFlight icin 99 USD/yil Developer)
+
+
+ADIM 1 — GitHub'da repo olustur
+--------------------------------
+1. https://github.com/new
+2. Repo adi: pir-hub-app (veya istediginiz)
+3. Public veya Private
+4. README ekleme (bos birakabilirsiniz)
+5. Create repository
+
+
+ADIM 2 — Projeyi GitHub'a yukle
+--------------------------------
+PowerShell'de (flutter_app klasorunde):
+
+  cd C:\Users\LENOVA\Desktop\rpi_pir_hub\flutter_app
+  git init
+  git add .
+  git commit -m "PIR Hub Flutter uygulamasi"
+  git branch -M main
+  git remote add origin https://github.com/KULLANICI_ADINIZ/pir-hub-app.git
+  git push -u origin main
+
+(KULLANICI_ADINIZ yerine GitHub kullanici adinizi yazin)
+
+
+ADIM 3 — Codemagic hesabi
+-------------------------
+1. https://codemagic.io/signup
+2. "Sign up with GitHub" ile giris
+3. GitHub erisimine izin verin
+4. pir-hub-app reposunu secin
+5. "Set up build" — codemagic.yaml otomatik algilanir
+
+
+ADIM 4 — iOS imza (Code signing) — ONEMLI
+-----------------------------------------
+Codemagic → Settings → codemagic.yaml settings → iOS code signing
+
+Yontem A — Ucretsiz Apple ID (kendi telefonunuz, ~7 gun gecerli):
+  1. "iOS code signing" → Automatic
+  2. Apple ID + sifre (veya app-specific password)
+  3. Bundle ID: com.seyitahmetkaris.pirhub
+  4. Distribution: Development
+
+Yontem B — Apple Developer Program (99 USD/yil):
+  App Store / TestFlight icin
+
+
+ADIM 5 — Ilk iOS derlemesi
+--------------------------
+1. Codemagic → "Start new build"
+2. Workflow: "PIR Hub iOS" (ios-workflow)
+3. Branch: main
+4. Start build
+5. 10-20 dk bekleyin
+6. Bitti → Artifacts → .ipa indirin
+
+
+ADIM 6 — iPhone'a yukleme
+-------------------------
+Development IPA icin:
+  - Mac + Xcode + Apple Configurator, VEYA
+  - Diawi.com / installonair.com ile link (Development profili cihaz UDID gerekebilir)
+
+En kolay alternatif (zaten hazir):
+  iPhone Safari → https://seyitahmetkaris.com.tr → Ana Ekrana Ekle
+
+
+ANDROID (bonus)
+---------------
+Codemagic'te "PIR Hub Android APK" workflow → app-release.apk indir
+
+
+SORUN GIDERME
+-------------
+Imza hatasi:
+  Codemagic → iOS code signing tekrar yapilandir
+  Bundle ID Xcode ile ayni olmali: com.seyitahmetkaris.pirhub
+
+Build basarisiz:
+  Codemagic loglarini okuyun
+  flutter pub get / pod install hatalarina bakin
+
+Apple ID 2FA:
+  https://appleid.apple.com → App-Specific Password olusturun
+  Codemagic'te bu sifreyi kullanin
+
+
+DOSYALAR
+--------
+  codemagic.yaml     — Codemagic yapilandirmasi (repo kokunde)
+  ios/               — iOS proje dosyalari
+  lib/main.dart      — Uygulama kodu
+
+Varsayilan sunucu: https://seyitahmetkaris.com.tr

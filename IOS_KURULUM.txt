@@ -1,0 +1,88 @@
+PIR Hub — iOS Kurulum ve Derleme
+=================================
+
+Ayni Flutter kodu Android ve iOS icin calisir.
+Varsayilan sunucu: https://seyitahmetkaris.com.tr
+
+ONEMLI
+------
+iOS uygulamasi (IPA) Windows'ta DERLENEMEZ.
+Apple zorunlulugu: Mac + Xcode gerekir.
+
+Secenekler:
+  A) Mac bilgisayarda derle (asagidaki adimlar)
+  B) Macin yoksa: Codemagic / GitHub Actions (ucretsiz Mac bulutu)
+  C) Test icin: iPhone'a Mac uzerinden dogrudan yukle (App Store sart degil)
+
+
+MAC'TE DERLEME (Adim adim)
+--------------------------
+
+1) Gereksinimler
+   - macOS 13+
+   - Xcode (App Store'dan ucretsiz)
+   - Flutter SDK: https://docs.flutter.dev/get-started/install/macos
+   - Apple ID (ucretsiz gelistirici hesabi yeterli — kendi telefonuna yuklemek icin)
+
+2) Projeyi Mac'e kopyala
+   flutter_app klasorunun tamamini Mac'e aktar (USB, Git, zip).
+
+3) Terminalde:
+   cd flutter_app
+   flutter pub get
+   cd ios && pod install && cd ..
+   open ios/Runner.xcworkspace
+
+4) Xcode'da:
+   - Runner → Signing & Capabilities
+   - Team: Apple ID hesabinizi secin
+   - Bundle Identifier: com.seyitahmetkaris.pirhub (benzersiz olmali)
+
+5) iPhone bagla (USB) veya Simulator sec
+
+6) Terminalden calistir:
+   flutter run --release
+
+   veya IPA olustur:
+   flutter build ipa --release
+
+7) IPA dosyasi:
+   build/ios/ipa/pir_motor_camera.ipa
+
+
+KENDI IPHONE'UNA YUKLEME (App Store olmadan)
+---------------------------------------------
+1) iPhone'da: Ayarlar → Gizlilik → Gelistirici Modu (iOS 16+)
+2) Mac + Xcode ile cihaza dogrudan yukle: flutter run --release
+3) veya TestFlight (Apple Developer Program ~99 USD/yil)
+
+
+APP STORE'A YUKLEME
+-------------------
+1) Apple Developer Program uyeligi (~99 USD/yil)
+2) App Store Connect'te uygulama olustur
+3) flutter build ipa --release
+4) Xcode → Product → Archive → Distribute App
+
+
+iOS OZELLIKLERI (projede ayarli)
+---------------------------------
+- Uygulama adi: PIR Hub
+- Bundle ID: com.seyitahmetkaris.pirhub
+- Min iOS: 13.0
+- HTTPS + WSS (seyitahmetkaris.com.tr) — guvenli baglanti
+- PIR bildirimi, motor, kamera stream (Android ile ayni)
+
+
+SORUN GIDERME
+-------------
+pod install hatasi:
+  sudo gem install cocoapods
+  cd ios && pod repo update && pod install
+
+Signing hatasi:
+  Xcode → Signing → Automatically manage signing → Team sec
+
+Baglanti hatasi:
+  Sunucu adresi: https://seyitahmetkaris.com.tr
+  Pi acik mi kontrol et
