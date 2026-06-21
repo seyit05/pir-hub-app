@@ -1,0 +1,60 @@
+Codemagic iOS imza hatasi cozumu
+=================================
+
+Hata:
+  No matching profiles found for bundle identifier ...
+
+Sebep:
+  Codemagic'te Apple Developer baglantisi ve imza dosyalari henuz yok.
+
+
+ONKOSUL (iOS IPA icin zorunlu)
+------------------------------
+Apple Developer Program uyeligi (~99 USD/yil).
+Ucretsiz Apple ID ile Codemagic'te IPA uretilemez.
+Ucretsiz kullanim: https://seyitahmetkaris.com.tr -> Ana Ekrana Ekle
+
+
+ADIM 1 — App Store Connect API anahtari
+---------------------------------------
+1. https://developer.apple.com/account  (veya App Store Connect)
+2. Users and Access -> Integrations -> App Store Connect API
+3. + ile yeni anahtar olustur (App Manager yetkisi)
+4. .p8 dosyasini indir (sadece 1 kez!)
+5. Issuer ID ve Key ID'yi not al
+
+
+ADIM 2 — Codemagic'e bagla
+--------------------------
+1. Codemagic -> Teams -> Personal account -> Team integrations
+2. Developer Portal -> Connect
+3. Anahtar adi: codemagic  (yaml'daki isimle AYNI olmali)
+4. Issuer ID, Key ID, .p8 dosyasini yukle -> Save
+
+
+ADIM 3 — Bundle ID kaydi
+------------------------
+1. https://developer.apple.com/account/resources/identifiers/list
+2. + -> App IDs -> App -> Continue
+3. Bundle ID: com.seyitahmetkaris.pirhub
+4. Register
+
+
+ADIM 4 — iPhone UDID (development icin)
+---------------------------------------
+1. iPhone -> Ayarlar -> Genel -> Hakkında (UDID icin Mac/Xcode veya
+   https://udid.io gibi site)
+2. developer.apple.com -> Devices -> + -> UDID ekle
+
+
+ADIM 5 — Yeniden derle
+----------------------
+Codemagic -> pir-hub-app -> Start new build -> PIR Hub iOS -> main
+
+Yeni yaml build sirasinda sertifika ve profili otomatik olusturur.
+
+
+Integration adi farkliysa
+-------------------------
+codemagic.yaml icindeki satiri degistir:
+  app_store_connect: SENIN_ANAHTAR_ADIN

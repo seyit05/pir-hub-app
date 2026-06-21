@@ -3,13 +3,23 @@ workflows:
     name: PIR Hub iOS
     max_build_duration: 60
     instance_type: mac_mini_m2
+    integrations:
+      app_store_connect: codemagic
     environment:
       flutter: stable
       xcode: latest
-      ios_signing:
-        distribution_type: development
-        bundle_identifier: com.seyitahmetkaris.pirhub
+      vars:
+        BUNDLE_ID: com.seyitahmetkaris.pirhub
     scripts:
+      - name: Keychain hazirla
+        script: keychain initialize
+      - name: Imza dosyalarini olustur/al
+        script: |
+          app-store-connect fetch-signing-files "$BUNDLE_ID" \
+            --type IOS_APP_DEVELOPMENT \
+            --create
+      - name: Sertifikalari ekle
+        script: keychain add-certificates
       - name: Paketler
         script: flutter pub get
       - name: CocoaPods
@@ -17,10 +27,11 @@ workflows:
           cd ios
           pod install
       - name: Xcode imza ayarlari
-        script: xcode-project use-profiles
+        script: xcode-project use-profiles --verbose
       - name: IPA derle
         script: |
           flutter build ipa --release \
+            --export-method development \
             --build-name=1.0.$PROJECT_BUILD_NUMBER \
             --build-number=$PROJECT_BUILD_NUMBER
     artifacts:
